@@ -34,7 +34,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 models.Base.metadata.create_all(bind=engine)
 
 # --- INICIALIZACIÓN DE LA APLICACIÓN ---
-app = FastAPI(title="Sistema Predictivo Académico - API")
+app = FastAPI(
+    title="API Académica BDI",
+    description="Panel técnico para registrar información. <br><br> 🌟 **[CLIC AQUÍ PARA VOLVER A LA APLICACIÓN WEB](https://sistema-predictivo-academico.vercel.app)**"
+)
 
 # Habilitar CORS para que el Frontend (puerto 5173) pueda comunicarse con el Backend (puerto 8000)
 app.add_middleware(
