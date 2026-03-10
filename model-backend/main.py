@@ -13,7 +13,6 @@ from bdi_agent.agent import AcademicBDIAgent
 # --- CONFIGURACIÓN DE BASE DE DATOS ---
 # Usamos SQLite local para facilitar el desarrollo inicial
 import os
-from dotenv import load_dotenv # Opcional si usas archivo .env local
 
 # --- CONFIGURACIÓN DE BASE DE DATOS (Preparado para Producción) ---
 # Si existe la variable DATABASE_URL en el servidor (PostgreSQL), la usa. 
