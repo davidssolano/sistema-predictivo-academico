@@ -35,8 +35,15 @@ models.Base.metadata.create_all(bind=engine)
 
 # --- INICIALIZACIÓN DE LA APLICACIÓN ---
 app = FastAPI(
-    title="API Académica BDI",
-    description="Panel técnico para registrar información. <br><br> 🌟 **[CLIC AQUÍ PARA VOLVER A LA APLICACIÓN WEB](https://sistema-predictivo-academico.vercel.app)**"
+    title="Panel de Datos - Sistema Predictivo Académico",
+    description="""
+    Desde aquí puedes registrar Estudiantes, Materias, Calificaciones y Asistencias.
+    
+    <br><br>
+    <a href="https://sistema-predictivo-academico.vercel.app" target="_blank" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; display: inline-block;">
+        ⬅️ VOLVER A LA APLICACIÓN WEB
+    </a>
+    """
 )
 
 # Habilitar CORS para que el Frontend (puerto 5173) pueda comunicarse con el Backend (puerto 8000)
