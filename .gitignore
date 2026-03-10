@@ -1,0 +1,13 @@
+# Entornos y dependencias
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Bases de datos locales
+*.db
+academic_test.db
+
+# Builds
+dist/
+.env
