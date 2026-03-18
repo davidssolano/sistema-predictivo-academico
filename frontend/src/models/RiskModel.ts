@@ -14,7 +14,7 @@ export class APIRiskModel implements RiskModelInterface {
         // Si no existe la variable (producción), asume que está en local
         const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
         
-        const response = await fetch(`${API_BASE_URL}/prediccion/${studentId}`);
+        const response = await fetch(`https://api-academica-mvp.onrender.com/analizar/${studentId}`);
         if (!response.ok) {
             throw new Error("Error al obtener la predicción del servidor");
         }
