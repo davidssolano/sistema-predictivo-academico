@@ -1,23 +1,23 @@
-export interface PredictionResult {
-    estudiante: string;
-    nivel_de_riesgo: string;
-    recomendaciones_agente: string[];
+export interface IRiskModel {
+    getStudentRisk(id: number): Promise<{ name: string; riskLevel: string; recommendations: string[] }>;
 }
 
-export interface RiskModelInterface {
-    predictRisk(studentId: number): Promise<PredictionResult>;
-}
-
-export class APIRiskModel implements RiskModelInterface {
-    async predictRisk(studentId: number): Promise<PredictionResult> {
-        // Vite usa import.meta.env para leer variables de entorno en React
-        // Si no existe la variable (producción), asume que está en local
-        const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+export class APIRiskModel implements IRiskModel {
+    async getStudentRisk(id: number) {
+        // AQUÍ ESTABA EL ERROR: Cambiamos /prediccion/ por /analizar/
+        const response = await fetch(`https://api-academica-mvp.onrender.com/analizar/${id}`);
         
-        const response = await fetch(`https://api-academica-mvp.onrender.com/analizar/${studentId}`);
         if (!response.ok) {
-            throw new Error("Error al obtener la predicción del servidor");
+            throw new Error('Hubo un problema al conectar con el servidor de IA.');
         }
-        return response.json();
+
+        const data = await response.json();
+        
+        // Mapeamos los datos que llegan de Python a lo que espera React
+        return {
+            name: data.nombre || `Estudiante #${id}`, // Si Python no manda nombre, ponemos el ID
+            riskLevel: data.riesgo || 'Desconocido',
+            recommendations: data.recomendaciones || ['Sin recomendaciones disponibles.']
+        };
     }
 }
