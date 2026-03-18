@@ -70,9 +70,35 @@ def create_estudiante(estudiante: schemas.EstudianteCreate, db: Session = Depend
 # (Asegúrate de que el nombre de la función coincida con cómo la habías programado)
 @app.get("/analizar/{estudiante_id}")
 def analizar_riesgo_estudiante(estudiante_id: int, db: Session = Depends(get_db)):
-    # Aquí es donde llamas a tu Agente BDI y a Scikit-Learn
-    # Ejemplo:
-    # agente = AcademicBDIAgent(db)
-    # resultado = agente.analizar_y_recomendar(estudiante_id)
+    # 1. Buscamos si el estudiante realmente existe en la base de datos
+    estudiante = db.query(models.Estudiante).filter(models.Estudiante.id == estudiante_id).first()
+    
+    if not estudiante:
+        raise HTTPException(status_code=404, detail="Estudiante no encontrado en la base de datos")
+
+    # =================================================================
+    # 2. AQUÍ VA TU INTELIGENCIA ARTIFICIAL (AGENTE BDI)
+    # Si tienes tu archivo del Agente BDI listo, descomenta las líneas 
+    # de abajo y úsalas. (Asegúrate de importarlo arriba en el archivo).
+    # =================================================================
+    
+    # from ai_engine.bdi_agent import AcademicBDIAgent # (Ejemplo de importación)
+    # agente = AcademicBDIAgent()
+    # resultado = agente.ejecutar_analisis(estudiante.id, db)
     # return resultado
-    pass # Reemplaza este pass con la lógica real de tu endpoint de análisis
+
+    # =================================================================
+    # 3. RESPUESTA DE RESPALDO (PRUEBA DE CONEXIÓN)
+    # Mientras conectas tu Agente real, este código temporal le 
+    # enviará una respuesta simulada a Vercel para comprobar que la 
+    # conexión entre ambos servidores funciona perfectamente.
+    # =================================================================
+    
+    return {
+        "riesgo": "Medio riesgo",
+        "recomendaciones": [
+            f"El estudiante {estudiante.nombre} requiere atención moderada.",
+            "Agendar una tutoría de nivelación esta misma semana.",
+            "Revisar el cumplimiento de sus últimas tareas entregadas."
+        ]
+    }
