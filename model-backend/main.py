@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Agrega la carpeta actual al radar de Python para que encuentre models.py, crud.py, etc.
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
