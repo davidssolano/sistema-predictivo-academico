@@ -125,3 +125,52 @@ def analizar_riesgo_estudiante(estudiante_id: int, db: Session = Depends(get_db)
         "riesgo": riesgo,
         "recomendaciones": comentarios
     }
+
+@app.get("/generar-notas-prueba/")
+def generar_notas_prueba(db: Session = Depends(get_db)):
+    import random
+    estudiantes = db.query(models.Estudiante).all()
+    
+    if not estudiantes:
+        return {"error": "No hay estudiantes en la base de datos."}
+
+    # 1. Crear Materias
+    nombres_materias = ["Matemáticas", "Física", "Programación"]
+    materias_db = []
+    for nombre in nombres_materias:
+        mat = db.query(models.Materia).filter(models.Materia.nombre == nombre).first()
+        if not mat:
+            mat = models.Materia(nombre=nombre, codigo=f"{nombre[:3].upper()}101")
+            db.add(mat)
+            db.commit()
+            db.refresh(mat)
+        materias_db.append(mat)
+
+    # 2. Inscribir y Calificar
+    estudiantes_modificados = 0
+    for est in estudiantes:
+        tiene_inscripciones = db.query(models.Inscripcion).filter(models.Inscripcion.estudiante_id == est.id).first()
+        if tiene_inscripciones:
+            continue # Si ya tiene notas, lo saltamos
+
+        perfil = est.id % 3 
+        estudiantes_modificados += 1
+
+        for mat in materias_db:
+            inscripcion = models.Inscripcion(estudiante_id=est.id, materia_id=mat.id)
+            db.add(inscripcion)
+            db.commit()
+            db.refresh(inscripcion)
+
+            if perfil == 0:
+                nota = random.uniform(4.0, 5.9) # Perfil bajo
+            elif perfil == 1:
+                nota = random.uniform(8.0, 10.0) # Perfil alto
+            else:
+                nota = random.uniform(6.0, 7.9) # Perfil medio
+
+            calificacion = models.Calificacion(inscripcion_id=inscripcion.id, valor=round(nota, 1))
+            db.add(calificacion)
+            
+    db.commit()
+    return {"mensaje": f"¡Éxito! Se generaron materias y notas aleatorias para {estudiantes_modificados} estudiantes."}
